@@ -15,6 +15,9 @@ you when a test center in Ulaanbaatar gets a seat for the SAT on 6 March 2027.
    Actions → New repository secret.
    - `GMAIL_ADDRESS`: your Gmail address
    - `GMAIL_APP_PASSWORD`: the 16-character code
+   - `ALERT_TO` (optional): where alerts go, if not just the address above.
+     For several people, separate addresses with commas:
+     `first@gmail.com, second@gmail.com`
 4. **Send a test email.** Actions tab → "Check SAT seats" → Run workflow →
    tick "Send a test email" → Run. You should get an email titled
    "SAT seat open: TEST".

@@ -27,6 +27,7 @@ jobs:
       CITY: "ULAANBAATAR"
       GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
       GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      ALERT_TO: ${{ secrets.ALERT_TO }} # optional: one or more addresses, comma-separated
     steps:
       - uses: actions/checkout@v4
 
