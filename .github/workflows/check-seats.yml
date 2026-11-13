@@ -1,0 +1,50 @@
+name: Check SAT seats
+
+on:
+  schedule:
+    - cron: "*/10 * * * *" # every 10 minutes (GitHub may run it a few minutes late)
+  workflow_dispatch:
+    inputs:
+      test_email:
+        description: "Send a test email instead of checking seats"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sat-seat-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TEST_DATE: "2027-03-06"
+      COUNTRY: "MN"
+      CITY: "ULAANBAATAR"
+      GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send test email
+        if: ${{ inputs.test_email }}
+        run: python3 check_seats.py --test-email
+
+      - name: Check seats
+        if: ${{ !inputs.test_email }}
+        run: python3 check_seats.py
+
+      - name: Save state
+        if: ${{ !inputs.test_email }}
+        run: |
+          if [ -n "$(git status --porcelain state.json)" ]; then
+            git config user.name "sat-seat-tracker"
+            git config user.email "sat-seat-tracker@users.noreply.github.com"
+            git add state.json
+            git commit -m "Update seat state"
+            git push
+          fi
